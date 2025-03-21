@@ -20,7 +20,10 @@ def get_container():
 
     try:
         container = client.containers.get(container_id)
-        container.start()
+        if (container.status == "paused"):
+            container.unpause()
+        elif (container.status != "running"):
+            container.start()
         return jsonify({"message": "Container Started!"}), 200
 
     except docker.errors.NotFound:
@@ -47,7 +50,8 @@ def get_container():
         resp.set_cookie('docker_container_id', container.id)
         return resp
 
-    except docker.errors.APIError:
+    except docker.errors.APIError as e:
+        print(f"APIError: {e}")
         return jsonify({"error": "Please try again later"}), 400
 
 
