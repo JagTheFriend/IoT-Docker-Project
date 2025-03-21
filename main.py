@@ -1,5 +1,6 @@
 import docker
 import uuid
+import os
 from flask import Flask, jsonify, make_response, request
 
 client = docker.from_env()
@@ -23,7 +24,12 @@ def get_container():
         container = client.containers.create(
             image="codercom/code-server:latest",
             name=f"user-code-server-{str(uuid.uuid4())}",
-            command=["code-server --auth none"],
+            volumes={
+                 os.path.join(os.getcwd(), 'config.yaml'): {
+                    'bind': '/home/coder/.config/code-server/config.yaml',
+                    'mode': 'ro'
+                }
+            },
             auto_remove=True,
             detach=True,
             ports={8080:0}
