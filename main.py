@@ -20,11 +20,15 @@ def get_container():
 
     try:
         container = client.containers.get(container_id)
+        port = container.ports["8080/tcp"][0]['HostPort']
         if (container.status == "paused"):
             container.unpause()
         elif (container.status != "running"):
             container.start()
-        return jsonify({"message": "Container Started!"}), 200
+
+        resp = make_response(jsonify({"message": "Container Started!"}), 201)
+        resp.set_cookie('docker_container_port', container.ports["8080/tcp"][0]['HostPort'])
+        return resp
 
     except docker.errors.NotFound:
         container = client.containers.create(
@@ -48,6 +52,7 @@ def get_container():
         container.exec_run("sudo mkdir /home/my-project")
         resp = make_response(jsonify({"message": "Container Created!"}), 201)
         resp.set_cookie('docker_container_id', container.id)
+        resp.set_cookie('docker_container_port', container.ports["8080/tcp"][0]['HostPort'])
         return resp
 
     except docker.errors.APIError as e:
