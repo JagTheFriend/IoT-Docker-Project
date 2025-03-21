@@ -13,12 +13,12 @@ def register():
     return jsonify({"message": "Hello World!"}), 201
 
 
-@app.route('/container', methods=['POST'])
+@app.route('/container', methods=['GET'])
 def get_container():
     container_id = request.cookies.get('docker_container_id')
 
     if not container_id:
-        return jsonify({"error": "Container ID not found in cookies"}), 400
+        container_id = 'some-random-id'
 
     try:
         container = client.containers.get(container_id)
@@ -27,6 +27,7 @@ def get_container():
         elif (container.status != "running"):
             container.start()
 
+        container.reload()
         resp = make_response(redirect(NGINX_URL + '/container'))
         resp.set_cookie('docker_container_port', container.ports["8080/tcp"][0]['HostPort'])
         return resp
@@ -51,7 +52,8 @@ def get_container():
         )
         container.start()
         container.exec_run("sudo mkdir /home/my-project")
-        resp = make_response(redirect(NGINX_URL + '/container'))
+        container.reload()
+        resp = make_response()
         resp.set_cookie('docker_container_id', container.id)
         resp.set_cookie('docker_container_port', container.ports["8080/tcp"][0]['HostPort'])
         return resp
