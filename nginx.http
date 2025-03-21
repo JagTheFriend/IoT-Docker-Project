@@ -5,8 +5,4 @@ GET {{baseUrl}}/
 ###
 GET {{baseUrl}}/container
 Content-Type: application/json
-
-{
-    "containerId": "debf309ddd46c9dc6b56c2a353be971835f0c8708fe9648a13c4cdea0c7980cb",
-    "containerPort": "32768"
-}
+Cookie: docker_container_port=32768
