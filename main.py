@@ -28,8 +28,9 @@ def get_container():
             container.start()
 
         container.reload()
+        port = container.ports["8080/tcp"][0]['HostPort']
         resp = make_response(redirect(NGINX_URL + '/container'))
-        resp.set_cookie('docker_container_port', container.ports["8080/tcp"][0]['HostPort'])
+        resp.set_cookie('docker_container_port', port)
         return resp
 
     except docker.errors.NotFound:
@@ -53,9 +54,10 @@ def get_container():
         container.start()
         container.exec_run("sudo mkdir /home/my-project")
         container.reload()
-        resp = make_response()
+        resp = make_response(redirect(NGINX_URL + '/container'))
+        port = container.ports["8080/tcp"][0]['HostPort']
         resp.set_cookie('docker_container_id', container.id)
-        resp.set_cookie('docker_container_port', container.ports["8080/tcp"][0]['HostPort'])
+        resp.set_cookie('docker_container_port', port)
         return resp
 
     except docker.errors.APIError as e:
