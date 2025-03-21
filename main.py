@@ -12,7 +12,7 @@ def register():
 
 @app.route('/container', methods=['POST'])
 def get_container():
-    container_id = request.cookies.get('docker_container_id')
+    container_id = request.json["docker_container_id"]
 
     try:
         container = client.containers.get(container_id)

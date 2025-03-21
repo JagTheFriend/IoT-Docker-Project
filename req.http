@@ -1,8 +1,13 @@
 @baseUrl = http://127.0.0.1:5000
-@containerId = 7e4387737aa26cde9cc791a5d41d24b28167ef434365b1248e00b7b8a5802fde
+@containerId = c0f1b40df943da86822c09b398f8164a79d2c27dea46fad24d82ff3277e18d85
 
 GET {{baseUrl}}/
 
 ###
 POST {{baseUrl}}/container
-Cookie: docker_container_id={{containerId}}
+Accept: application/json
+Content-Type: application/json
+
+{
+    "docker_container_id": "{{containerId}}"
+}
