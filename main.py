@@ -17,6 +17,7 @@ def get_container():
     try:
         container = client.containers.get(container_id)
         container.start()
+        return jsonify({"message": "Container Started!"}), 200
 
     except docker.errors.NotFound:
         container = client.containers.create(
