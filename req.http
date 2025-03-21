@@ -1,0 +1,8 @@
+@baseUrl = http://127.0.0.1:5000
+@containerId = c6c0c7b7c1b0
+
+GET {{baseUrl}}/
+
+###
+POST {{baseUrl}}/container
+Cookie: docker_container_id={{containerId}}
