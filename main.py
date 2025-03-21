@@ -13,7 +13,10 @@ def register():
 
 @app.route('/container', methods=['POST'])
 def get_container():
-    container_id = request.json["docker_container_id"]
+    container_id = request.cookies.get('docker_container_id')
+
+    if not container_id:
+        return jsonify({"error": "Container ID not found in cookies"}), 400
 
     try:
         container = client.containers.get(container_id)
@@ -47,7 +50,6 @@ def get_container():
     except docker.errors.APIError:
         return jsonify({"error": "Please try again later"}), 400
 
-    return 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
