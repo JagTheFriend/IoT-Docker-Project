@@ -28,6 +28,10 @@ def get_container():
                  os.path.join(os.getcwd(), 'config.yaml'): {
                     'bind': '/home/coder/.config/code-server/config.yaml',
                     'mode': 'ro'
+                },
+                os.path.join(os.getcwd(), 'coder.json'): {
+                    'bind': '/home/coder/.local/share/code-server/coder.json',
+                    'mode': 'ro'
                 }
             },
             auto_remove=True,
@@ -35,6 +39,7 @@ def get_container():
             ports={8080:0}
         )
         container.start()
+        container.exec_run("sudo mkdir /home/my-project")
         resp = make_response(jsonify({"message": "Container Created!"}), 201)
         resp.set_cookie('docker_container_id', container.id)
         return resp

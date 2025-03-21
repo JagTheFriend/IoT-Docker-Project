@@ -1,5 +1,5 @@
 @baseUrl = http://127.0.0.1:5000
-@containerId = c0f1b40df943da86822c09b398f8164a79d2c27dea46fad24d82ff3277e18d85
+@containerId = empty
 
 GET {{baseUrl}}/
 
